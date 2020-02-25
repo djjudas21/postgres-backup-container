@@ -1,5 +1,5 @@
 # Container to create PostgreSQL Backups
-Minimalisitic container (only 25MB) for backing up PostgreSQL databases. 
+Minimalisitic container for backing up PostgreSQL databases. 
 
 ## Goal
 
@@ -10,37 +10,39 @@ Intended to be used with:
 2. Container Instances (e.g Azure Container Instances, AWS Fargate) that can be scheduled at specified times.
 3. Your computer! It's smaller than pgAdmin.  
 
-## Running the Backup CronJob in Azure Kubernetes Service (AKS)
-### Step 1. Create a storage account 
-It has to be in the same Resource Group as the Kubernetes Cluster(the cluster resources not the resource group where the  Kubernetes Managed Service is located).
+## Environment Variables
 
-Name the storage account uniquely. And update [pg-storage-class.yaml](./aks/pg-storage-class.yaml) to use the unique name instead of "pgbackupstorage"
+* `PGHOST` (default: `localhost`)
+* `PGPORT` (default: `5432`)
+* `PGDATABASE` (default: `postgres`)
+* `PGUSER` (default: `postgres@postgres`)
+* `PGPASSWORD` (default: `password`)
 
+## Running the Backup CronJob in Kubernetes
 
-### Step 2. Replace your Database creds.
-Replace database creds in [pg-backup-cronJob.yaml](./aks/pg-backup-cronJob.yaml). !Attention: This is for simplicity these should be replaced with Secrets.
+1. Replace database creds in [pg-backup-cronJob.yaml](./kubernetes/pg-backup-cronJob.yaml).
+**Attention**: This example is for simplicity, and these should be replaced with Secrets in a production environment.
 
-### Step 3. Create the resources
-Execute below command:
+Run this command to create your Kubernetes resources:
 
-` kubectl create -f ./aks`
+```sh
+kubectl create -f ./kubernetes
+```
 
 ## Running manually on your computer
-### Step 1. Pull the image
-` docker pull rinormaloku/postgres-back-up `
 
-
-### Step 2. Run and map to your drive (e.g. /d/backup)
-` docker run -v /host/backup:/pg_backup rinormaloku/postgres-back-up `
+```sh
+docker run -v /host/backup:/pg_backup djjudas21/postgres-backup
+```
 
 ## Contributing and Modifying
 
 1. Make your desired changes and build the container:
 
-` docker build -t $DOCKER_USER/postgres-back-up . `
+`docker build -t $DOCKER_USER/postgres-backup .`
 
 2. Test it locally by executing the command below:
 
-` docker run -v /d/backup:/pg_backup $DOCKER_USER/postgres-back-up `
+`docker run -v /host/backup:/pg_backup $DOCKER_USER/postgres-backup`
 
 3. Verify that it is an improvement and commit your changes ;)
