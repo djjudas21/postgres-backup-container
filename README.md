@@ -1,5 +1,5 @@
 # Container to create PostgreSQL Backups
-Minimalisitic container for backing up PostgreSQL databases. 
+Minimalistic container for backing up PostgreSQL databases.
 
 ## Goal
 
@@ -17,6 +17,11 @@ Intended to be used with:
 * `PGDATABASE` (default: `postgres`)
 * `PGUSER` (default: `postgres@postgres`)
 * `PGPASSWORD` (default: `password`)
+
+## Tags
+
+This image is tagged with the same major versions as Postgres (currently, `9`, `10` and `11`). You must specify the tag
+to match your Postgres database server.
 
 ## Running the Backup CronJob in Kubernetes
 
